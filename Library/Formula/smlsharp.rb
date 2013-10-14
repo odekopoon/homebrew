@@ -1,16 +1,10 @@
 require 'formula'
 
-# Documentation: https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
-#                /usr/local/Library/Contributions/example-formula.rb
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
-
 class Smlsharp < Formula
   homepage 'http://www.pllab.riec.tohoku.ac.jp/smlsharp/'
   url 'http://www.pllab.riec.tohoku.ac.jp/smlsharp/download/smlsharp-1.2.0.tar.gz'
   sha1 '4eb9c0559656e35a989c8500daf99883767825d9'
 
-  # depends_on 'cmake' => :build
-#  depends_on :x11 # if your formula requires any X11/XQuartz components
   depends_on 'xz'
   depends_on 'gmp'
   depends_on 'smlnj'
@@ -28,7 +22,6 @@ class Smlsharp < Formula
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
                           "--enable-fast-build"
-    # system "cmake", ".", *std_cmake_args
     system "make", "install" # if this fails, try separate make/make install steps
   end
 
