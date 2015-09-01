@@ -3,6 +3,7 @@ class Ponyc < Formula
   homepage "http://www.ponylang.org"
   url "http://www.ponylang.org/releases/source/ponyc-0.1.7.tar.bz2"
   sha256 "fc6f783f65cd6708a80bdea71f414cada801528143ea22d9bb13957cb7061eb6"
+  head "git://github.com/CausalityLtd/ponyc.git"
 
   bottle do
     sha256 "ccee2ae558144cd1bda30376b3fe922e7eb6224ab9e69247deb066f663a4c9ae" => :yosemite
@@ -10,6 +11,8 @@ class Ponyc < Formula
     sha256 "b195bbd971219e3a9598e38833589b73b8dd12280a800a91d02bab74e8b1787b" => :mountain_lion
   end
 
+  depends_on "libressl"
+  depends_on "pcre2"
   depends_on "llvm" => "with-rtti"
   needs :cxx11
 
