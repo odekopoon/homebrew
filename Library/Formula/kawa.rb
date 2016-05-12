@@ -11,8 +11,46 @@ class Kawa < Formula
     prefix.install "kawa-#{version}.jar"
     (bin+'kawa').write <<-EOS.undent
       #!/bin/sh
+      thisfile=`which $0`
+      thisdir=`dirname $thisfile`
+      if [ "$#" -eq 0 ]
+      then
+         command_line="$0"
+      else
+         command_line="$0 $*"
+      fi
+      test -t 0 || no_console="--no-console"
+
       KAWA_HOME="#{prefix}"
-      java -jar "$KAWA_HOME/kawa-#{version}.jar"
+      KAWA_LIB="$KAWA_HOME/kawa-#{version}.jar"
+      CLASSPATH="${KAWA_LIB}:${CLASSPATH}"
+      export CLASSPATH
+
+      # This ugly duplication is so we only have to use arrays (which are
+      # non-Posix and non-portable) if there is a -D or -J option.
+      case "$1" in
+          -D* | -J*)
+              i=0
+              for arg in "$@"; do
+                  case "$arg" in
+                      -D*)
+                          jvm_args[i++]="$arg"
+                          shift
+                      ;;
+                      -J*)
+                          jvm_args[i++]="$(echo $arg|cut -c 3-)"
+                          shift
+                      ;;
+                      *) break
+                      ;;
+                  esac
+              done
+              exec ${JAVA-"java"} -Dkawa.command.line="${command_line}" "${jvm_args[@]}" kawa.repl ${no_console} "$@"
+              ;;
+          *)
+              exec ${JAVA-"java"} -Dkawa.command.line="${command_line}" kawa.repl ${no_console} "$@"
+              ;;
+      esac
     EOS
   end
 end
